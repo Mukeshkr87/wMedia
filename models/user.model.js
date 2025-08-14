@@ -28,14 +28,14 @@ const userSchema = new Schema({
        type:String,
        required:true, 
     }, 
-    converImage:{
+    coverImage:{
        type:String,
     },
-     watchHistory:{
+     watchHistory:[{
         type:Schema.Types.ObjectId,
         ref:"video",  
-    },
-    passWord:{
+    }],
+    password:{
         type: String,
         required: [true,"PassWord is required"]
     },
@@ -46,12 +46,12 @@ const userSchema = new Schema({
 
 userSchema.pre("save",async function (next){
    if(this.isModified("password")){
-      this.passWord = await bcrypt.hash(this.passWord,10)
+      this.password = await bcrypt.hash(this.password,10)
    }
    next()
 })
-userSchema.methods.isPasswordCorrect = async function(passWord){
-   return await bcrypt.compare(passWord,this.passWord)
+userSchema.methods.isPasswordCorrect = async function(password){
+   return await bcrypt.compare(password,this.passWord)
 }
 
 userSchema.methods.generateAccessToken = function(){
